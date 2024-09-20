@@ -12,6 +12,15 @@ namespace BackEndManagerWebApi.Controllers {
             this.logger = logger;
             this.httpClientFactory = httpClientFactory;
         }
+        [HttpGet(Name = "YieldSample")]
+        public async Task<IActionResult> YieldSample() {
+            int totRes = 0;
+            string wordtomatch = "Task";
+            await foreach (var word in MatchCountFromEndpoint("https://learn.microsoft.com/it-it/dotnet/csharp/asynchronous-programming/async-return-types", wordtomatch)) {
+                totRes++;
+            }
+            return Ok(totRes);
+        }
         [HttpGet(Name = "GetHttpAsync")]
         public async Task<IActionResult> GetHttpAsync() {
             Console.WriteLine("Inizio alle {0}", DateTime.Now.ToString("mm:ss.fff"));
@@ -29,6 +38,23 @@ namespace BackEndManagerWebApi.Controllers {
                 ];
             Console.WriteLine("Fine alle {0}", DateTime.Now.ToString("mm:ss.fff"));
             return Ok(string.Join("\n", content.ToArray()));
+        }
+
+        //TODO: esempio yield finalmente chiaro !!!! grazie chatgpt !!
+        public async IAsyncEnumerable<string> MatchCountFromEndpoint(string url, string match) {
+            Task<string> data;
+            using (HttpClient client = new HttpClient()) {
+                data = client.GetStringAsync(url);
+                using var readStream = new StringReader(await data);
+                string? line = readStream.ReadLine();
+                while (line != null) {
+                    foreach (string word in line.Split(' ', StringSplitOptions.RemoveEmptyEntries)) {
+                        if (word.Equals(match, StringComparison.InvariantCultureIgnoreCase))
+                            yield return word;
+                    }
+                    line = readStream.ReadLine();
+                }
+            }
         }
     }
 }
