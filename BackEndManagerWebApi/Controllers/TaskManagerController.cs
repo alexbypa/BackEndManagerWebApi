@@ -21,7 +21,16 @@ namespace BackEndManagerWebApi.Controllers {
             }
             return Ok(totRes);
         }
-        [HttpGet(Name = "GetHttpAsync")]
+        [HttpOptions(Name = "switchSample")]
+        public IActionResult switchSample(int grade) {
+            string result = grade switch {
+                < 20 => "Excellent",
+                > 20 => "Good",
+                _ => ""
+            };
+            return Ok(result);
+        }
+        [HttpPost(Name = "GetHttpAsync")]
         public async Task<IActionResult> GetHttpAsync() {
             Console.WriteLine("Inizio alle {0}", DateTime.Now.ToString("mm:ss.fff"));
             httpsClientHelper httpsClientHelper = new httpsClientHelper(httpClientFactory);
@@ -41,7 +50,7 @@ namespace BackEndManagerWebApi.Controllers {
         }
 
         //TODO: esempio yield finalmente chiaro !!!! grazie chatgpt !!
-        public async IAsyncEnumerable<string> MatchCountFromEndpoint(string url, string match) {
+        private async IAsyncEnumerable<string> MatchCountFromEndpoint(string url, string match) {
             Task<string> data;
             using (HttpClient client = new HttpClient()) {
                 data = client.GetStringAsync(url);
