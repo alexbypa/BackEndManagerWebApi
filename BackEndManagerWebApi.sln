@@ -3,9 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.34916.146
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackEndManagerWebApi", "BackEndManagerWebApi\BackEndManagerWebApi.csproj", "{E2F5A6D4-D4C9-45B1-AEE3-0064D3A281DF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BackEndManagerWebApi", "BackEndManagerWebApi\BackEndManagerWebApi.csproj", "{E2F5A6D4-D4C9-45B1-AEE3-0064D3A281DF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackEndManagerBusinessLogic", "BackEndManagerBusinessLogic\BackEndManagerBusinessLogic.csproj", "{9DA73D99-ECDF-4DDA-A565-6C64D66B0957}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BackEndManagerBusinessLogic", "BackEndManagerBusinessLogic\BackEndManagerBusinessLogic.csproj", "{9DA73D99-ECDF-4DDA-A565-6C64D66B0957}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3A35CF97-8868-42CF-9DE5-A840FC32E171}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		Dicrectory.Build.Props = Dicrectory.Build.Props
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

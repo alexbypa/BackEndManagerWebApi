@@ -23,6 +23,7 @@ namespace BackEndManagerWebApi.Controllers {
         }
         [HttpOptions(Name = "switchSample")]
         public IActionResult switchSample(int grade) {
+             
             string result = grade switch {
                 < 20 => "Excellent",
                 > 20 => "Good",
