@@ -1,24 +1,33 @@
 using Asp.Versioning;
+using Asp.Versioning.ApiExplorer;
 using BackEndManagerBusinessLogic.httphelper;
-using Microsoft.Extensions.Options;
-using System.Reflection.Metadata.Ecma335;
+using Microsoft.OpenApi.Models;
 var builder = WebApplication.CreateBuilder(args);
 
-#region Versioning !!!!
 builder.Services.AddApiVersioning(options => {
-    options.ApiVersionReader = new QueryStringApiVersionReader("api-version");  //path dove leggere il versioning
-    options.DefaultApiVersion = new ApiVersion(new DateOnly(2024, 1, 1));       //versioning default
-    options.AssumeDefaultVersionWhenUnspecified = true;                         //prende il default se non specificato
-    options.ReportApiVersions = true;                                           //restituisce nell' header il report delle versioni
-}).AddApiExplorer();
-#endregion
+    options.DefaultApiVersion = new ApiVersion(1, 0);
+    options.AssumeDefaultVersionWhenUnspecified = true;
+    options.ReportApiVersions = true;
+    options.ApiVersionReader = ApiVersionReader.Combine(
+        new UrlSegmentApiVersionReader(),
+        new HeaderApiVersionReader("X-Api-Version")
+    );
+})
+.AddApiExplorer(options => {
+    options.GroupNameFormat = "'v'VVV";
+    options.SubstituteApiVersionInUrl = true;
+});
+
 
 // Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c => {
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API - V1", Version = "v1.0" });
+    c.SwaggerDoc("v1.1", new OpenApiInfo { Title = "My API - V1.1", Version = "v1.1" });
+    c.SwaggerDoc("v2", new OpenApiInfo { Title = "My API - V2", Version = "v2.0" });
+});
 #region Config
 builder.Services.AddOptions();
 #endregion
@@ -29,36 +38,15 @@ builder.Services.AddHttpClients(builder.Configuration);
 
 var app = builder.Build();
 
-#region Versioning !!!!
-//install Asp.Versioning.Mvc.ApiExplorer    ( minimal api ) 
-//install Asp.Versioning.Http               ( Controller ) 
-
-
-var apiVersionSet = app.NewApiVersionSet()
-    .HasApiVersion(new ApiVersion(new DateOnly(2024, 1, 1)))
-    .HasApiVersion(new ApiVersion(new DateOnly(2024, 9, 20))) //Versioni Supportate !
-    .Build();
-app.UseHttpsRedirection();
-
-app.MapGet("api/ping", () => {
-    return TypedResults.Ok("asdasd");
-})
-.WithApiVersionSet(apiVersionSet)
-.MapToApiVersion(new DateOnly(2024,1,1))
-.WithOpenApi();
-
-app.MapGet("api/ping", () => {
-    return TypedResults.Ok("l'utili su");
-})
-.WithApiVersionSet(apiVersionSet)
-.MapToApiVersion(new DateOnly(2024,9,20))
-.WithOpenApi();
-
-#endregion
-
+var apiVersionDescriptionProvider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
 if (app.Environment.IsDevelopment()) {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(options => {
+        foreach (var description in apiVersionDescriptionProvider.ApiVersionDescriptions) {
+            options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json",
+                description.GroupName.ToUpperInvariant());
+        };
+    });
 }
 
 app.UseAuthorization();

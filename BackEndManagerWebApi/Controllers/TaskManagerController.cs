@@ -1,10 +1,31 @@
+using Asp.Versioning;
 using BackEndManagerBusinessLogic.httphelper;
 using Microsoft.AspNetCore.Mvc;
-using System.Net.Http;
 
 namespace BackEndManagerWebApi.Controllers {
     [ApiController]
-    [Route("[controller]")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:ApiVersion}/[controller]")]
+    public class MyControllerV2 : ControllerBase {
+
+        [MapToApiVersion("1.0")]
+        [HttpGet]
+        public IActionResult Get() => Ok("API Version 1.0");
+    }
+
+    [ApiController]
+    [ApiVersion("1.1")]
+    [Route("api/v{version:ApiVersion}/[controller]")]
+    public class MyControllerV11 : ControllerBase {
+
+        [MapToApiVersion("1.1")]
+        [HttpGet]
+        public IActionResult Get() => Ok("API Version 1.1");
+    }
+
+    [ApiController]
+    [ApiVersion("2.0")]
+    [Route("api/v{version:ApiVersion}/[controller]")]
     public class TaskManagerController : ControllerBase {
         private readonly ILogger<TaskManagerController> logger;
         private readonly IHttpClientFactory httpClientFactory;
@@ -13,6 +34,7 @@ namespace BackEndManagerWebApi.Controllers {
             this.httpClientFactory = httpClientFactory;
         }
         [HttpGet(Name = "YieldSample")]
+        [MapToApiVersion("2.0")]
         public async Task<IActionResult> YieldSample() {
             int totRes = 0;
             string wordtomatch = "Task";
@@ -22,6 +44,7 @@ namespace BackEndManagerWebApi.Controllers {
             return Ok(totRes);
         }
         [HttpOptions(Name = "switchSample")]
+        [MapToApiVersion("2.0")]
         public IActionResult switchSample(int grade) {
              
             string result = grade switch {
@@ -32,6 +55,7 @@ namespace BackEndManagerWebApi.Controllers {
             return Ok(result);
         }
         [HttpPost(Name = "GetHttpAsync")]
+        [MapToApiVersion("2.0")]
         public async Task<IActionResult> GetHttpAsync() {
             Console.WriteLine("Inizio alle {0}", DateTime.Now.ToString("mm:ss.fff"));
             httpsClientHelper httpsClientHelper = new httpsClientHelper(httpClientFactory);
