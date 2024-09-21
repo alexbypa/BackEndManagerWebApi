@@ -4,12 +4,12 @@ using Microsoft.Extensions.Options;
 using System.Reflection.Metadata.Ecma335;
 var builder = WebApplication.CreateBuilder(args);
 
-#region Versioning 
+#region Versioning !!!!
 builder.Services.AddApiVersioning(options => {
-    options.ApiVersionReader = new QueryStringApiVersionReader("api-version");
-    options.DefaultApiVersion = new ApiVersion(new DateOnly(2024, 1, 1));
-    options.AssumeDefaultVersionWhenUnspecified = true;
-    options.ReportApiVersions = true;
+    options.ApiVersionReader = new QueryStringApiVersionReader("api-version");  //path dove leggere il versioning
+    options.DefaultApiVersion = new ApiVersion(new DateOnly(2024, 1, 1));       //versioning default
+    options.AssumeDefaultVersionWhenUnspecified = true;                         //prende il default se non specificato
+    options.ReportApiVersions = true;                                           //restituisce nell' header il report delle versioni
 }).AddApiExplorer();
 #endregion
 
@@ -29,7 +29,7 @@ builder.Services.AddHttpClients(builder.Configuration);
 
 var app = builder.Build();
 
-#region Versioning 
+#region Versioning !!!!
 //install Asp.Versioning.Mvc.ApiExplorer    ( minimal api ) 
 //install Asp.Versioning.Http               ( Controller ) 
 
