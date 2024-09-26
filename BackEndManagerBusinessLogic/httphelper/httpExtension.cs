@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 namespace BackEndManagerBusinessLogic.httphelper;
 public static class httpExtension {
     public static IServiceCollection AddHttpClients(this IServiceCollection services, IConfiguration configuration) {
-        //services.AddTransient<LoggerHandler>(); //TODO:
+        //services.AddTransient<CustomLoggingHandler>(); 
         var httpclientoptions = configuration.GetSection("HttpClientOptions");
 
         services.Configure<List<httpClientOptions>>(httpclientoptions);
@@ -12,10 +12,11 @@ public static class httpExtension {
         if (options != null)
             foreach (var option in options) {
                 services.AddHttpClient<httpsClientHelper>(option.Name)
-                    .SetHandlerLifetime(TimeSpan.FromSeconds(30));
+                    .SetHandlerLifetime(TimeSpan.FromSeconds(30))
+                    ;
+                    //.AddHttpMessageHandler<CustomLoggingHandler>();
                     //.ConfigurePrimaryHttpMessageHandler(() => new httpBindingOptions()
                     //.getCertificateForHttpHandler(option.Certificate.Path, option.Certificate.Password))
-                    //.AddHttpMessageHandler<LoggerHandler>();//TODO:
             }
 
         return services;

@@ -1,28 +1,7 @@
 using Asp.Versioning;
-using BackEndManagerBusinessLogic.httphelper;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BackEndManagerWebApi.Controllers {
-    [ApiController]
-    [ApiVersion("1.0")]
-    [Route("api/v{version:ApiVersion}/[controller]")]
-    public class MyControllerV2 : ControllerBase {
-
-        [MapToApiVersion("1.0")]
-        [HttpGet]
-        public IActionResult Get() => Ok("API Version 1.0");
-    }
-
-    [ApiController]
-    [ApiVersion("1.1")]
-    [Route("api/v{version:ApiVersion}/[controller]")]
-    public class MyControllerV11 : ControllerBase {
-
-        [MapToApiVersion("1.1")]
-        [HttpGet]
-        public IActionResult Get() => Ok("API Version 1.1");
-    }
-
     [ApiController]
     [ApiVersion("2.0")]
     [Route("api/v{version:ApiVersion}/[controller]")]
@@ -54,26 +33,6 @@ namespace BackEndManagerWebApi.Controllers {
             };
             return Ok(result);
         }
-        [HttpPost(Name = "GetHttpAsync")]
-        [MapToApiVersion("2.0")]
-        public async Task<IActionResult> GetHttpAsync() {
-            Console.WriteLine("Inizio alle {0}", DateTime.Now.ToString("mm:ss.fff"));
-            httpsClientHelper httpsClientHelper = new httpsClientHelper(httpClientFactory);
-            Task<HttpResponseMessage> responseMessage2 = httpsClientHelper.sendAsync("https://reqres.in/api/users?delay=2", "POST");
-            Task<HttpResponseMessage> responseMessage4 = httpsClientHelper.sendAsync("https://reqres.in/api/users?delay=4", "POST");
-            Task<HttpResponseMessage> responseMessage5 = httpsClientHelper.sendAsync("https://reqres.in/api/users?delay=5", "POST");
-            HttpResponseMessage httpResponseMessage2 = await responseMessage2;
-            HttpResponseMessage httpResponseMessage4 = await responseMessage4;
-            HttpResponseMessage httpResponseMessage5 = await responseMessage5;
-            List<string> content = [
-                await httpResponseMessage2.Content.ReadAsStringAsync(),
-                await httpResponseMessage4.Content.ReadAsStringAsync(),
-                await httpResponseMessage5.Content.ReadAsStringAsync()
-                ];
-            Console.WriteLine("Fine alle {0}", DateTime.Now.ToString("mm:ss.fff"));
-            return Ok(string.Join("\n", content.ToArray()));
-        }
-
         //TODO: esempio yield finalmente chiaro !!!! grazie chatgpt !!
         private async IAsyncEnumerable<string> MatchCountFromEndpoint(string url, string match) {
             Task<string> data;

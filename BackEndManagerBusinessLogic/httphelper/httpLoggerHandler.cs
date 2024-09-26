@@ -1,11 +1,20 @@
-﻿using System.Net;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.RateLimiting;
-using Microsoft.AspNetCore.Http;
+﻿namespace BackEndManagerBusinessLogic.httphelper {
+    public class HttpLoggingHandler : DelegatingHandler {
+        private readonly Action<HttpRequestMessage, HttpResponseMessage, DateTime, DateTime> _logAction;
+        public HttpLoggingHandler(Action<HttpRequestMessage, HttpResponseMessage, DateTime, DateTime> logAction) {
+            _logAction = logAction;
+        }
+        protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken) {
+            DateTime timeRequest = DateTime.Now;
+            Console.WriteLine($"Request: {request}");
+            var response = await base.SendAsync(request, cancellationToken);
+            _logAction?.Invoke(request, response, timeRequest, DateTime.Now);
+            Console.WriteLine($"Response: {response}");
+            return response;
+        }
+    }
 
 
-namespace BackEndManagerBusinessLogic.httphelper {
     //public class httpBindingOptions {
     //    public httpBindingOptions() { }
     //    HttpClientHandler instance { get; set; }
