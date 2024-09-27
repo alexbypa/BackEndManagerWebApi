@@ -1,19 +1,15 @@
-﻿namespace BackEndManagerBusinessLogic.httphelper {
-    public class HttpLoggingHandler : DelegatingHandler {
-        private readonly Action<HttpRequestMessage, HttpResponseMessage, DateTime, DateTime> _logAction;
-        public HttpLoggingHandler(Action<HttpRequestMessage, HttpResponseMessage, DateTime, DateTime> logAction) {
-            _logAction = logAction;
-        }
+﻿using System.Threading.RateLimiting;
+
+namespace BackEndManagerBusinessLogic.httphelper {
+    public class HttpClientHandler : DelegatingHandler {
+        public Action<HttpRequestMessage, HttpResponseMessage, DateTime, DateTime>? logAction;
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken) {
             DateTime timeRequest = DateTime.Now;
-            Console.WriteLine($"Request: {request}");
             var response = await base.SendAsync(request, cancellationToken);
-            _logAction?.Invoke(request, response, timeRequest, DateTime.Now);
-            Console.WriteLine($"Response: {response}");
+            logAction?.Invoke(request, response, timeRequest, DateTime.Now);
             return response;
         }
     }
-
 
     //public class httpBindingOptions {
     //    public httpBindingOptions() { }
