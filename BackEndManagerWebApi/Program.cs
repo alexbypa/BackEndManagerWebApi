@@ -1,6 +1,5 @@
 using Asp.Versioning;
 using Asp.Versioning.ApiExplorer;
-using BackEndManagerBusinessLogic.httphelper;
 using Microsoft.OpenApi.Models;
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,10 +32,27 @@ builder.Services.AddOptions();
 #endregion
 
 #region HttpClient
-builder.Services.AddHttpClients(builder.Configuration);
+builder.Services.AddHttpClient<GitHubService>(httpClient => {
+    httpClient.BaseAddress = new Uri("https://api.github.com");
+});
+builder.Services.AddTransient<LoggingDelegatingHandler>();
+
+builder.Services.AddHttpClient<GitHubService>(httpClient => {
+    httpClient.BaseAddress = new Uri("https://api.github.com");
+})
+.AddHttpMessageHandler<LoggingDelegatingHandler>();
 #endregion
 
 var app = builder.Build();
+
+//TODO:=======
+app.MapGet("api/users/{username}", async (
+    string username,
+    GitHubService gitHubService) => {
+        var content = await gitHubService.GetByUsernameAsync(username);
+
+        return Results.Ok(content);
+    });
 
 var apiVersionDescriptionProvider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
 if (app.Environment.IsDevelopment()) {
@@ -54,3 +70,35 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+//TODO:====
+public class GitHubService(HttpClient client) {
+    public async Task<string> GetByUsernameAsync(string username) {
+        var url = $"users/{username}";
+
+        return await client.GetStringAsync(url);
+    }
+}
+
+public class LoggingDelegatingHandler(ILogger<LoggingDelegatingHandler> logger)
+    : DelegatingHandler {
+    protected override async Task<HttpResponseMessage> SendAsync(
+        HttpRequestMessage request,
+        CancellationToken cancellationToken) {
+        try {
+            logger.LogInformation("Before HTTP request");
+
+            var result = await base.SendAsync(request, cancellationToken);
+
+            result.EnsureSuccessStatusCode();
+
+            logger.LogInformation("After HTTP request");
+
+            return result;
+        } catch (Exception e) {
+            logger.LogError(e, "HTTP request failed");
+
+            throw;
+        }
+    }
+}

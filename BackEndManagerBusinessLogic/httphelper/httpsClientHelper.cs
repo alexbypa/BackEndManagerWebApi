@@ -6,25 +6,29 @@ public class httpsClientHelper : IhttpsClientHelper {
     protected HttpClient httpClient;
     protected HttpClientHandler httpLoggingHandler;
     protected RateLimiter rateLimiter;
+    private Func<HttpResponseMessage, bool> RetryCondition;
     public httpsClientHelper(IHttpClientFactory clientFactory, string clientName) {
         this.clientFactory = clientFactory;
         httpClient = this.clientFactory.CreateClient(clientName);
     }
-    public async Task<HttpResponseMessage> sendAsync(string BaseUrl, string Method) {
+    public httpsClientHelper(IHttpClientFactory clientFactory, string clientName, Func<HttpResponseMessage, bool> RetryCondition) {
+        this.clientFactory = clientFactory;
+        httpClient = this.clientFactory.CreateClient(clientName);
+        this.RetryCondition = RetryCondition;
+    }
+    public async Task<HttpResponseMessage> sendAsync(string BaseUrl) {
         if (rateLimiter != null) {
             RateLimitLease lease = await rateLimiter.AcquireAsync();
-            //while (lease == null || !lease.IsAcquired)
-            //    await Task.Delay(100);
-        }
+        }        
         Task<HttpResponseMessage> response = httpClient.GetAsync(BaseUrl);
         return await response;
     }
-    public httpsClientHelper setTimeout(TimeSpan timeSpan) {
+    public httpsClientHelper addTimeout(TimeSpan timeSpan) {
         httpClient.Timeout = timeSpan;
         return this;
     }
-    public httpsClientHelper AddHeaders(string KeyName, string KeyValue) {
-        httpClient.DefaultRequestHeaders.Add("User-Agent", "HttpClientFactory-Sample");
+    public httpsClientHelper addHeaders(string KeyName, string KeyValue) {
+        httpClient.DefaultRequestHeaders.Add(KeyName, KeyValue);
         return this;
     }
     public httpsClientHelper addLogger(Action<HttpRequestMessage, HttpResponseMessage, DateTime, DateTime> logAction) {
@@ -52,6 +56,4 @@ public class httpsClientHelper : IhttpsClientHelper {
         return this;
     }
 }
-public interface IhttpsClientHelper {
-
-}
+public interface IhttpsClientHelper {}
