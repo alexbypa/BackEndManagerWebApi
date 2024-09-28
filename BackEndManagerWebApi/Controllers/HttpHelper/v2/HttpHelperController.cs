@@ -16,7 +16,7 @@ namespace BackEndManagerWebApi.Controllers.HttpHelper.v2 {
             httpConfig = httpoptions.Value;
         }
         [HttpPost(Name = "GetHttpAsync")]
-        public async Task<IActionResult> GetHttpAsync() {
+        public async Task<IActionResult> GetHttpAsync(int retryCondition) {
             Console.WriteLine("Inizio alle {0}", DateTime.Now.ToString("HH:mm:ss.fff"));
             httpsClientHelper httpsClientHelper = new httpsClientHelper(httpClientFactory, "reqres");
 
@@ -28,9 +28,11 @@ namespace BackEndManagerWebApi.Controllers.HttpHelper.v2 {
             PollyRetryPolicy retryPolicy = new PollyRetryPolicy();
             responseMessage2 = retryPolicy.ExecuteAsync<HttpResponseMessage>(async () => {
                 //return await responseMessage2;
-                return await httpsClientHelper.sendAsync("https://httpbin.org/status/429");
+                return await httpsClientHelper
+                    .addLogger((req, res, start, stop) => Console.WriteLine($":::::::::::CHIAMO {req}"))
+                    .sendAsync($"https://httpbin.org/status/{retryCondition}");
             },
-                (response) => response.StatusCode == System.Net.HttpStatusCode.TooManyRequests
+                (response) => (int)response.StatusCode == retryCondition
             );
             var response2 = await responseMessage2;
             Console.WriteLine("Fine alle {0}", DateTime.Now.ToString("HH:mm:ss.fff"));
