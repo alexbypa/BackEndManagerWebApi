@@ -17,7 +17,6 @@ builder.Services.AddApiVersioning(options => {
     options.SubstituteApiVersionInUrl = true;
 });
 
-
 // Add services to the container.
 
 builder.Services.AddControllers();

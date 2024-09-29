@@ -32,7 +32,8 @@ namespace BackEndManagerWebApi.Controllers.HttpHelper.v1 {
             responseMessage2 = retryPolicy.ExecuteAsync<HttpResponseMessage>(async () => {
                 return await responseMessage2;
                 }, 
-                (response) => response.StatusCode == System.Net.HttpStatusCode.TooManyRequests);
+                (response) => response.StatusCode == System.Net.HttpStatusCode.TooManyRequests, 
+                (result, timespan, retry, context) => { });
 
             //HttpResponseMessage responseMessage4 = await httpsClientHelper.sendAsync("https://reqres.in/api/users?delay=4");
             HttpResponseMessage responseMessage5 = await httpsClientHelper.sendAsync("https://reqres.in/api/users?delay=3");

@@ -21,18 +21,23 @@ namespace BackEndManagerWebApi.Controllers.HttpHelper.v2 {
             httpsClientHelper httpsClientHelper = new httpsClientHelper(httpClientFactory, "reqres");
 
             Task<HttpResponseMessage> responseMessage2 = httpsClientHelper
-                //.addLogger((request, response, start, stop) => Console.WriteLine($"REQ {request.RequestUri}, STATUS {response.StatusCode}, FROM {start} TO : {stop}"))
                 .addTimeout(TimeSpan.FromSeconds(5))
                 .sendAsync("https://httpbin.org/status/429");
 
             PollyRetryPolicy retryPolicy = new PollyRetryPolicy();
             responseMessage2 = retryPolicy.ExecuteAsync<HttpResponseMessage>(async () => {
-                //return await responseMessage2;
                 return await httpsClientHelper
                     .addLogger((req, res, start, stop) => Console.WriteLine($":::::::::::CHIAMO {req}"))
                     .sendAsync($"https://httpbin.org/status/{retryCondition}");
             },
-                (response) => (int)response.StatusCode == retryCondition
+                (response) => (int)response.StatusCode == retryCondition,
+                (result, timeSpan, retryCount, context) => {
+                    if (result.Exception != null)
+                        Console.WriteLine(result.Exception.ToString());
+                    else
+                        Console.WriteLine(result.Result.ToString());
+                    Console.WriteLine($"Tentativo fallito {retryCount}. Ritenterò tra {timeSpan.TotalSeconds} secondi.");
+                }
             );
             var response2 = await responseMessage2;
             Console.WriteLine("Fine alle {0}", DateTime.Now.ToString("HH:mm:ss.fff"));
