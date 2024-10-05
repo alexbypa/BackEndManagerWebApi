@@ -1,7 +1,12 @@
 using Asp.Versioning;
 using Asp.Versioning.ApiExplorer;
+using BackEndManagerBusinessLogic.signalr.hubs;
 using Microsoft.OpenApi.Models;
 var builder = WebApplication.CreateBuilder(args);
+
+#region signalr
+builder.Services.AddSignalR();
+#endregion
 
 builder.Services.AddApiVersioning(options => {
     options.DefaultApiVersion = new ApiVersion(1, 0);
@@ -43,6 +48,12 @@ builder.Services.AddHttpClient<GitHubService>(httpClient => {
 #endregion
 
 var app = builder.Build();
+
+
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+app.MapHub<ChatHub>("/chatHub");
+
 
 //TODO:=======
 app.MapGet("api/users/{username}", async (
