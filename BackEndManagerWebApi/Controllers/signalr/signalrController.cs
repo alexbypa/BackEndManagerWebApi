@@ -16,15 +16,14 @@ namespace BackEndManagerWebApi.Controllers.signalr {
             _hubContext = hubContext;
             _hubNotification = hubNotification;
         }
-        [HttpGet(Name = "sample")]
+        [HttpGet(Name = "sample", Order = 1)]
         [MapToApiVersion("1.0")]
         public async Task<IActionResult> sample(string username, string message) {
             await _hubContext.Clients.All.SendAsync("ReceiveMessage", username, message);
             return Ok();
         }
-        [HttpPost(Name = "samplewithtype")]
+        [HttpPost(Name = "samplewithtype", Order = 2)]
         [MapToApiVersion("1.0")]
-        [EnableCors("enablecorsforclient")]
         public async Task<IActionResult> samplewithtype(string NotificationType, string Message) {
             var payload = new PayloadSocket {
                 NotificationType = NotificationType,
