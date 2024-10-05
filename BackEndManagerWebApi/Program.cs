@@ -1,11 +1,22 @@
 using Asp.Versioning;
 using Asp.Versioning.ApiExplorer;
 using BackEndManagerBusinessLogic.signalr.hubs;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.OpenApi.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 #region signalr
-builder.Services.AddSignalR();
+builder.Services.AddCors(options => options.AddPolicy(name: "enablecorsforclient", builder => {
+    builder.AllowAnyMethod()
+    .AllowAnyHeader()
+    .AllowCredentials()
+    .WithOrigins("http://localhost:5051")
+    .SetIsOriginAllowed((host) => true);
+}));
+builder.Services.AddScoped<NotificationHub>();
+builder.Services.AddSignalR().AddHubOptions<NotificationHub>(options => {
+    options.EnableDetailedErrors = true;
+});
 #endregion
 
 builder.Services.AddApiVersioning(options => {
@@ -49,10 +60,10 @@ builder.Services.AddHttpClient<GitHubService>(httpClient => {
 
 var app = builder.Build();
 
-
-app.UseHttpsRedirection();
 app.UseStaticFiles();
-app.MapHub<ChatHub>("/chatHub");
+app.UseCors("enablecorsforclient");
+//app.MapHub<ChatHub>("/chatHub");
+app.MapHub<NotificationHub>("/NotificationHub");
 
 
 //TODO:=======

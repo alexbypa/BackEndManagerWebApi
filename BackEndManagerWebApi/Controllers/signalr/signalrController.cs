@@ -1,7 +1,9 @@
 ﻿using Asp.Versioning;
 using BackEndManagerBusinessLogic.signalr.hubs;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Newtonsoft.Json;
 
 namespace BackEndManagerWebApi.Controllers.signalr {
     [ApiController]
@@ -9,15 +11,28 @@ namespace BackEndManagerWebApi.Controllers.signalr {
     [Route("api/v{version:ApiVersion}/[controller]")]
     public class signalrController : ControllerBase {
         private readonly IHubContext<ChatHub> _hubContext;
-        public signalrController(IHubContext<ChatHub> hubContext) {
+        private readonly IHubContext<NotificationHub, INotification> _hubNotification;
+        public signalrController(IHubContext<ChatHub> hubContext, IHubContext<NotificationHub, INotification> hubNotification) {
             _hubContext = hubContext;
+            _hubNotification = hubNotification;
         }
         [HttpGet(Name = "sample")]
         [MapToApiVersion("1.0")]
         public async Task<IActionResult> sample(string username, string message) {
-            await Task.Delay(100);
             await _hubContext.Clients.All.SendAsync("ReceiveMessage", username, message);
             return Ok();
+        }
+        [HttpPost(Name = "samplewithtype")]
+        [MapToApiVersion("1.0")]
+        [EnableCors("enablecorsforclient")]
+        public async Task<IActionResult> samplewithtype(string NotificationType, string Message) {
+            var payload = new PayloadSocket {
+                NotificationType = NotificationType,
+                Message = Message
+            };
+            string message = JsonConvert.SerializeObject(payload, Formatting.Indented);
+            await _hubNotification.Clients.All.SendMessage(payload);
+            return Ok(message);
         }
     }
 }
