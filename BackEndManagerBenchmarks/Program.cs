@@ -1,6 +1,7 @@
 ﻿using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Jobs;
 using BenchmarkDotNet.Running;
+using Newtonsoft.Json;
 
 class Program {
     public static void Main(string[] args) {
@@ -16,7 +17,7 @@ class Program {
 public class ListCountBenchmark {
     private List<int> _list;
 
-    [Params(1_000_000)]
+    [Params(1_000)]
     public int Count { get; set; }
 
     [GlobalSetup]
@@ -25,13 +26,31 @@ public class ListCountBenchmark {
 
         _list = range.ToList();
     }
+    //[Benchmark]
+    //public int ListCountMethod() => _list.Count();
+
+    //[Benchmark]
+    //public int ListCountProperty() => _list.Count;
 
     [Benchmark]
-    public int ListCountMethod() => _list.Count();
-
+    public void serializeNewtonSoft() {
+        var json = JsonConvert.SerializeObject(_list);
+        var obj = JsonConvert.DeserializeObject<List<int>>(json);
+        Console.WriteLine(json);
+    }
     [Benchmark]
-    public int ListCountProperty() => _list.Count;
-
+    public void serializeSystem() {
+        var json = System.Text.Json.JsonSerializer.Serialize(_list);
+        var obj = System.Text.Json.JsonSerializer.Deserialize<List<int>>(json);
+        Console.WriteLine(json);
+    }
+    [Benchmark]
+    public void serializeNetJson() {
+        var json = NetJSON.NetJSON.Serialize(_list);
+        var obj = NetJSON.NetJSON.Deserialize<List<int>>(json);
+        Console.WriteLine(json);
+    }
 }
+
 
 

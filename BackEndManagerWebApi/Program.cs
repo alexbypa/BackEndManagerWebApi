@@ -17,6 +17,8 @@ builder.Services.AddScoped<NotificationHub>();
 builder.Services.AddSignalR().AddHubOptions<NotificationHub>(options => {
     options.EnableDetailedErrors = true;
 });
+builder.Services.AddSingleton<INotificationService, NotificationService>();
+builder.Services.AddTransient<yourBusinessLogic>();
 #endregion
 
 builder.Services.AddApiVersioning(options => {
@@ -61,10 +63,11 @@ builder.Services.AddHttpClient<GitHubService>(httpClient => {
 var app = builder.Build();
 
 app.UseStaticFiles();
+#region signalr
 app.UseCors("enablecorsforclient");
 //app.MapHub<ChatHub>("/chatHub");
 app.MapHub<NotificationHub>("/NotificationHub");
-
+#endregion
 
 //TODO:=======
 app.MapGet("api/users/{username}", async (
