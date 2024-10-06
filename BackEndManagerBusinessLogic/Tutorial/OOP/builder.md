@@ -8,7 +8,7 @@ Vediamo un esempio concreto e ampiamente utilizzato, come la costruzione di una 
 Immagina di voler costruire un oggetto di richiesta HTTP con molte proprietà opzionali, come metodo, URL, intestazioni, corpo, ecc. Usando il **Builder Pattern**, possiamo gestire queste opzioni in modo leggibile e flessibile.
 
 ### 2. **Esempio Reale con il Builder Pattern**:
-
+ 
 Supponiamo di dover costruire una richiesta HTTP, dove solo alcune proprietà sono obbligatorie (come il metodo e l'URL), ma altre (intestazioni, contenuto, ecc.) sono opzionali.
 
 #### Classe HTTP Request (oggetto da costruire):
@@ -16,6 +16,7 @@ Supponiamo di dover costruire una richiesta HTTP, dove solo alcune proprietà so
 ```csharp
 public class HttpRequest
 {
+    //TODO:
     public string Method { get; private set; }
     public string Url { get; private set; }
     public string Body { get; private set; }
