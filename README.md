@@ -76,3 +76,25 @@ document.getElementById("sendButton").addEventListener("click", function (event)
 });
 ```
 
+ **Spiegazione**
+- var connection = new signalR.HubConnectionBuilder().withUrl("/NotificationHub", opts)
+**NotificationHub** deve essere il nome dell' interfaccia dell' hub che poi corrisponde alla riga sul program.cs:
+- app.MapHub<NotificationHub>("/NotificationHub");
+Mentre su connection.on("SendMessage", wsgotdata );
+SendMessage è il Task ereditato e wsgotdata è l' oggetto usato dall' interfaccia :
+
+```csharp
+public class PayloadSocket {
+    public string? NotificationType { get; set; }
+    public object? Message { get; set; }
+}
+public class NotificationHub : Hub<INotification> {
+    public async Task SendMessage(PayloadSocket Payload) {
+        await Clients.All.SendMessage(Payload);
+
+    }
+    public override Task OnConnectedAsync() {
+        return base.OnConnectedAsync();
+    }
+}
+```
