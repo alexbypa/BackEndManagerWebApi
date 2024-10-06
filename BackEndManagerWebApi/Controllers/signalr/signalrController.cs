@@ -1,8 +1,8 @@
 ﻿using Asp.Versioning;
 using BackEndManagerBusinessLogic.signalr.hubs;
+using BackEndManagerWebApi.InternalBusinessLogic.signalR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.Diagnostics.Tracing.Parsers.MicrosoftWindowsTCPIP;
 using Newtonsoft.Json;
 
 namespace BackEndManagerWebApi.Controllers.signalr {

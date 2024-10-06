@@ -15,7 +15,10 @@ connection.on("SendMessage", wsgotdata );
 function wsgotdata(d) {
     var li = document.createElement("li");
     document.getElementById("messagesList").appendChild(li);
-    li.textContent = `Notifica ${d.notificationType} : Messaggio ${d.message}`;
+    li.textContent = `Notifica : ${d.notificationType} : Sport ${d.message.sport} : Cat: ${d.message.category} : tournament: ${d.message.tournament}`;
+    li = document.createElement("li");
+    document.getElementById("messagesList").appendChild(li);
+    li.textContent = `content: ${d.message.additionalInfo}`;
     console.log(d);
 }
 

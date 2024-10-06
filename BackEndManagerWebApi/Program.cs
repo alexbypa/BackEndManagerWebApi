@@ -1,7 +1,7 @@
 using Asp.Versioning;
 using Asp.Versioning.ApiExplorer;
 using BackEndManagerBusinessLogic.signalr.hubs;
-using Microsoft.AspNetCore.SignalR;
+using BackEndManagerWebApi.InternalBusinessLogic.signalR;
 using Microsoft.OpenApi.Models;
 var builder = WebApplication.CreateBuilder(args);
 
