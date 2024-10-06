@@ -1,4 +1,3 @@
-﻿using BackEndManagerBusinessLogic.httphelper;
 using Microsoft.AspNetCore.SignalR;
 
 namespace BackEndManagerBusinessLogic.signalr.hubs;
@@ -19,10 +18,10 @@ public class NotificationHub : Hub<INotification> {
     }
 }
 
-public interface INotificationService {
+public interface INotificationSocketService {
     Task NotifyClientsAsync(PayloadSocket payload);
 }
-public class NotificationService : INotificationService {
+public class NotificationService : INotificationSocketService {
     private readonly IHubContext<NotificationHub, INotification> _hubContext;
 
     public NotificationService(IHubContext<NotificationHub, INotification> hubContext) {
