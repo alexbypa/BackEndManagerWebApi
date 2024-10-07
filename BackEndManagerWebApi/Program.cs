@@ -17,7 +17,7 @@ builder.Services.AddScoped<NotificationHub>();
 builder.Services.AddSignalR().AddHubOptions<NotificationHub>(options => {
     options.EnableDetailedErrors = true;
 });
-builder.Services.AddSingleton<INotificationService, NotificationService>();
+builder.Services.AddSingleton<INotificationSocketService, NotificationSocketService>();
 builder.Services.AddTransient<yourBusinessLogic>();
 #endregion
 

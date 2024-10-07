@@ -15,10 +15,16 @@ connection.on("SendMessage", wsgotdata );
 function wsgotdata(d) {
     var li = document.createElement("li");
     document.getElementById("messagesList").appendChild(li);
-    li.textContent = `Notifica : ${d.notificationType} : Sport ${d.message.sport} : Cat: ${d.message.category} : tournament: ${d.message.tournament}`;
+    li.textContent = `NOTIFICA : ${d.notificationType}`;
     li = document.createElement("li");
     document.getElementById("messagesList").appendChild(li);
-    li.textContent = `content: ${d.message.additionalInfo}`;
+    li.textContent = `LENGTH : ${d.message.contentLength}`;
+    li = document.createElement("li");
+    document.getElementById("messagesList").appendChild(li);
+    li.textContent = `HTTP STATUS: ${d.message.httpStatus}`;
+    li = document.createElement("li");
+    document.getElementById("messagesList").appendChild(li);
+    li.textContent = `CONTENT: ${d.message.content}`;
     console.log(d);
 }
 

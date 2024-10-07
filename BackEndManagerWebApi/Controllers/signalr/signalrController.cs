@@ -39,7 +39,7 @@ namespace BackEndManagerWebApi.Controllers.signalr {
         [HttpPut(Name = "samplewithtypebl", Order = 2)]
         [MapToApiVersion("1.0")]
         public async Task<IActionResult> samplewithtypebl(string NotificationType, string Message) {
-            await _businessLogic.PerformOperation("reqres");
+            await _businessLogic.SendNotification("reqres");
             return Ok("OK");
         }
     }
