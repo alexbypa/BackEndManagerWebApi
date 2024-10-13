@@ -1,5 +1,6 @@
 using Asp.Versioning;
 using Asp.Versioning.ApiExplorer;
+using BackEndManagerBusinessLogic.healtchecks;
 using BackEndManagerBusinessLogic.signalr.hubs;
 using BackEndManagerWebApi.InternalBusinessLogic.signalR;
 using Microsoft.OpenApi.Models;
@@ -20,6 +21,8 @@ builder.Services.AddSignalR().AddHubOptions<NotificationHub>(options => {
 builder.Services.AddSingleton<INotificationSocketService, NotificationSocketService>();
 builder.Services.AddTransient<yourBusinessLogic>();
 #endregion
+
+builder.Services.AddCustomHealthChecks(builder.Configuration);
 
 builder.Services.AddApiVersioning(options => {
     options.DefaultApiVersion = new ApiVersion(1, 0);
@@ -69,6 +72,7 @@ app.UseCors("enablecorsforclient");
 app.MapHub<NotificationHub>("/NotificationHub");
 #endregion
 
+
 //TODO:=======
 app.MapGet("api/users/{username}", async (
     string username,
@@ -89,9 +93,14 @@ if (app.Environment.IsDevelopment()) {
     });
 }
 
+app.UseRouting(); // Add this line
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseEndpoints(endpoints => {
+    _ = endpoints.MapHealthChecks("/health");
+});
 
 app.Run();
 
