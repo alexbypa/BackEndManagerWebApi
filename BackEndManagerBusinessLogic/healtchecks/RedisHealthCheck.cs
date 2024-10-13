@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Diagnostics.HealthChecks;
+﻿using Azure.Identity;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using StackExchange.Redis;
 
 namespace BackEndManagerBusinessLogic.healtchecks;
@@ -11,6 +12,8 @@ public class RedisHealthCheck : HealthCheckHandler {
 
     protected override async Task<HealthCheckResult> PerformHealthCheckAsync() {
         try {
+            //return HealthCheckResult.Healthy("Redis is reachable."); //TODO: 
+
             var redis = ConnectionMultiplexer.Connect(_redisConnectionString);
             var database = redis.GetDatabase();
             var ping = await database.PingAsync();

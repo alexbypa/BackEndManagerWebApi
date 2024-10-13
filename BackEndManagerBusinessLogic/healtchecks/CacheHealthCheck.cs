@@ -5,8 +5,8 @@ public class CacheHealthCheck : HealthCheckHandler {
     protected override async Task<HealthCheckResult> PerformHealthCheckAsync() {
         try {
             await Task.Delay(10);   
-            if (new Random().Next(100) < 50)
-                return HealthCheckResult.Healthy("Redis is reachable.");
+            if (1 == 1) //if (new Random().Next(100) < 50)
+                return HealthCheckResult.Healthy("Cache local is ok.");
             else
                 return HealthCheckResult.Degraded("Redis is slow.");
         } catch (Exception ex) {

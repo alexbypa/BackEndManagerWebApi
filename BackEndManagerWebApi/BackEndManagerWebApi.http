@@ -1,6 +1,6 @@
-@BackEndManagerWebApi_HostAddress = http://localhost:5051
+@BackEndManagerWebApi = http://localhost:5051
 
-GET {{BackEndManagerWebApi_HostAddress}}/weatherforecast/
+GET {{BackEndManagerWebApi}}/api/health/
 Accept: application/json
 
 ###

@@ -3,7 +3,10 @@ using Asp.Versioning.ApiExplorer;
 using BackEndManagerBusinessLogic.healtchecks;
 using BackEndManagerBusinessLogic.signalr.hubs;
 using BackEndManagerWebApi.InternalBusinessLogic.signalR;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.OpenApi.Models;
+using System.Net.Mime;
+using System.Text.Json;
 var builder = WebApplication.CreateBuilder(args);
 
 #region signalr
@@ -98,10 +101,36 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+#region #healtchecks
 app.UseEndpoints(endpoints => {
-    _ = endpoints.MapHealthChecks("/health");
-});
+    _ = endpoints.MapHealthChecks("/api/health", new() {
+        ResultStatusCodes =
+{
+        [HealthStatus.Healthy] = StatusCodes.Status200OK,
+        [HealthStatus.Degraded] = StatusCodes.Status200OK,
+        [HealthStatus.Unhealthy] = StatusCodes.Status503ServiceUnavailable
+    },
+        ResponseWriter = async (context, report) => {
+            var result = JsonSerializer.Serialize(
+                new {
+                    status = report.Status.ToString(),
+                    details = report.Entries.Select(entry => new {
+                        name = entry.Key,
+                        //service = entry.Key,
+                        status = entry.Value.Status.ToString(),
+                        duration = report.TotalDuration.TotalMilliseconds,
+                        description = entry.Value.Description
+                        //exception = entry.Value.Exception?.Message,
+                    })
+                });
 
+            context.Response.ContentType = MediaTypeNames.Application.Json;
+            await context.Response.WriteAsync(result);
+        }
+    });
+    _ = endpoints.MapHealthChecksUI();
+});
+#endregion
 app.Run();
 
 //TODO:====

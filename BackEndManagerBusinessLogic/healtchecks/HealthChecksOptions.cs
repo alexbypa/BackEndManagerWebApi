@@ -4,9 +4,14 @@ public class HealthChecksOptions {
     public bool CacheHealthCheck { get; set; }
     public bool RedisCheck { get; set; }
     public HealthChecksConnectionStrings ConnectionStrings { get; set; }
+    public healtCheckUiSettings UiSettings { get; set; }
 }
 public class HealthChecksConnectionStrings {
     public string SqlServer { get; set; }
     public string Redis { get; set; }
+}
+public class healtCheckUiSettings {
+    public int SecondPollinginterval { get; set; }
+    public string Uri { get; set; }
 }
 
