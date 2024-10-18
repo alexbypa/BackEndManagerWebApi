@@ -21,7 +21,7 @@
 #### THREADS
 - [Doc](THREADS/main.md)
 #### PACKAGES
-- [Format template with Enrich](packages/Serilog)
+- [Format template with Enrich](packages/Serilog/Enrich.md)
 ##### Esempi
 - [Semplice](THREADS/EsempioSemplice.md)
 - [HealthCheck](THREADS/healthcheck.md)
