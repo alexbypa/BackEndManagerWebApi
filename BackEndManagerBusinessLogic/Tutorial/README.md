@@ -11,6 +11,7 @@
 - [Create Random string and set variable](postman/randomstr.md)
 - [Cicle Json Response](postman/CicleJson.md)
 - [test and verify pm Response](postman/testPm.md)
+- [parsing XML QueryString and Json](postman/TestService.md)
 #### DESIGN PATTERN AND DEPENDENCY INJECTION
 - [Strategy Pattern (cache)](OOP/StrategyPattern.md)
 - [Lazy TODO](OOP/StrategyPattern.md)
