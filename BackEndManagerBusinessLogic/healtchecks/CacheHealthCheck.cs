@@ -6,7 +6,7 @@ public class CacheHealthCheck : HealthCheckHandler {
         try {
             await Task.Delay(10);   
             if (1 == 1) //if (new Random().Next(100) < 50)
-                return HealthCheckResult.Healthy("Cache local is ok.");
+                return HealthCheckResult.Healthy("- **Cache**: Redis is ok%\\n");
             else
                 return HealthCheckResult.Degraded("Redis is slow.");
         } catch (Exception ex) {

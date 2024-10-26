@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace BackEndManagerBusinessLogic.healtchecks {
     public class SystemResourcesHealthCheck : HealthCheckHandler {
-        protected override Task<HealthCheckResult> PerformHealthCheckAsync() {
+        protected override async Task<HealthCheckResult> PerformHealthCheckAsync() {
             var process = Process.GetCurrentProcess();
 
             // Ottieni utilizzo della CPU in percentuale
@@ -17,21 +17,15 @@ namespace BackEndManagerBusinessLogic.healtchecks {
             var maxMemoryUsage = 500;
 
             // Verifica se i valori superano i limiti
-            var status = (cpuUsage < maxCpuUsage && memoryUsage < maxMemoryUsage)
-                ? HealthStatus.Healthy
-                : HealthStatus.Unhealthy;
+            var status = (cpuUsage < maxCpuUsage && memoryUsage < maxMemoryUsage);
+                //? HealthStatus.Healthy
+                //: HealthStatus.Unhealthy;
 
-            var data = new Dictionary<string, object>
-            {
-            { "CPU Usage (%)", cpuUsage },
-            { "Memory Usage (MB)", memoryUsage }
-        };
+            if (status) 
+                return HealthCheckResult.Healthy($"- **CPU Usage**: {cpuUsage}%\n - **Memory Usage**: {memoryUsage} MB");
+            else
+                return HealthCheckResult.Unhealthy($"- **CPU Usage**: {cpuUsage}%\n - **Memory Usage**: {memoryUsage} MB");
 
-            return Task.FromResult(new HealthCheckResult(
-                status,
-                description: "Health check for system resources",
-                data: data
-            ));
         }
         private double GetCpuUsage(Process process) {
             // Formula per calcolare l'uso della CPU
