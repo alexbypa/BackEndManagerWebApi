@@ -1,5 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog.Sinks.Elasticsearch;
+using Serilog;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace BackEndManagerBusinessLogic.healtchecks;
 public static class healtchecksExtension {
@@ -9,7 +12,23 @@ public static class healtchecksExtension {
         if (healthChecksOptions == null) {
             return services;
         }
-        var healthChecks = services.AddHealthChecks();
+        var healthChecks = services.AddHealthChecks()
+            .AddElasticsearch("http://localhost:9200", name: "ElasticSearch");
+
+        services.AddSingleton<IHealthCheckPublisher, ElasticsearchHealthCheckPublisher>();
+        services.Configure<HealthCheckPublisherOptions>(options =>
+        {
+            options.Delay = TimeSpan.FromSeconds(10);
+            options.Period = TimeSpan.FromMinutes(1);
+        });
+
+        Log.Logger = new LoggerConfiguration()
+        .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri("http://10.0.1.119:9200")) {
+            AutoRegisterTemplate = true,
+            IndexFormat = "healthchecks-{0:yyyy.MM.dd}"
+        })
+        .CreateLogger();
+
         HealthCheckHandler? firstCheck = null;
 
         if (healthChecksOptions.RedisCheck && !string.IsNullOrEmpty(healthChecksOptions.ConnectionStrings?.Redis)) {
@@ -26,6 +45,14 @@ public static class healtchecksExtension {
             else
                 firstCheck = cacheHealthCheck;
         }
+        if (healthChecksOptions.SystemResourcesHealthCheck) {
+            var systemHealth = new SystemResourcesHealthCheck();
+            if (firstCheck != null)
+                firstCheck.SetNext(systemHealth);
+            else
+                firstCheck = systemHealth;
+        }
+
             if (firstCheck != null)
                 healthChecks.AddCheck("dynamic_chain_health_check", firstCheck);
 
@@ -39,5 +66,15 @@ public static class healtchecksExtension {
             setup.SetNotifyUnHealthyOneTimeUntilChange();
         }).AddSqlServerStorage(healthChecksOptions.ConnectionStrings.SqlServer);
         return services;
+    }
+}
+
+public class ElasticsearchHealthCheckPublisher : IHealthCheckPublisher {
+    public Task PublishAsync(HealthReport report, CancellationToken cancellationToken) {
+        // Converti il report in un oggetto log e invialo a Elasticsearch
+        foreach (var entry in report.Entries) {
+            Log.Information("Health check for {Name} reported {Status}", entry.Key, entry.Value.Status);
+        }
+        return Task.CompletedTask;
     }
 }
