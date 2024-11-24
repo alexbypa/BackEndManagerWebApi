@@ -8,17 +8,6 @@ public abstract class HealthCheckHandler : IHealthCheck {
         _nextHandler = nextHandler;
         return nextHandler;
     }
-    //// Implementazione di IHealthCheck
-    //public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default) {
-    //    // Esegui il controllo corrente
-    //    var result = await PerformHealthCheckAsync();
-
-    //    if (result.Status == HealthStatus.Healthy && _nextHandler != null) {
-    //        // Passa al prossimo controllo se il risultato è Healthy
-    //        return await _nextHandler.CheckHealthAsync(context, cancellationToken);
-    //    }
-    //    return result;
-    //}
     public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default) {
         // Lista per raccogliere tutti i risultati
         var results = new List<HealthCheckResult>();

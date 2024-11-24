@@ -9,7 +9,6 @@ public class RedisHealthCheck : HealthCheckHandler {
     public RedisHealthCheck(string redisConnectionString) {
         _redisConnectionString = redisConnectionString;
     }
-
     protected override async Task<HealthCheckResult> PerformHealthCheckAsync() {
         try {
             var redis = ConnectionMultiplexer.Connect(_redisConnectionString);
