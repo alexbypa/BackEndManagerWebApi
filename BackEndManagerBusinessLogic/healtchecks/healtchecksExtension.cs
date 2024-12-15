@@ -3,6 +3,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Serilog.Sinks.Elasticsearch;
 using Serilog;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using BenchmarkDotNet.Running;
+using Nest;
 
 namespace BackEndManagerBusinessLogic.healtchecks;
 public static class healtchecksExtension {
@@ -12,14 +14,14 @@ public static class healtchecksExtension {
         if (healthChecksOptions == null) {
             return services;
         }
-        var healthChecks = services.AddHealthChecks()
-            .AddElasticsearch("http://localhost:9200", name: "ElasticSearch");
+        var healthChecks = services.AddHealthChecks();
+        //    .AddElasticsearch("http://localhost:9200", name: "ElasticSearch");
 
         services.AddSingleton<IHealthCheckPublisher, ElasticsearchHealthCheckPublisher>();
         services.Configure<HealthCheckPublisherOptions>(options =>
         {
             options.Delay = TimeSpan.FromSeconds(10);
-            options.Period = TimeSpan.FromMinutes(1);
+            options.Period = TimeSpan.FromSeconds(30);
         });
 
         Log.Logger = new LoggerConfiguration()
@@ -54,7 +56,7 @@ public static class healtchecksExtension {
         }
 
             if (firstCheck != null)
-                healthChecks.AddCheck("dynamic_chain_health_check", firstCheck);
+                healthChecks.AddCheck("Global Checks", firstCheck);
 
         services.AddHealthChecksUI(setupSettings: setup =>
         {
@@ -73,7 +75,9 @@ public class ElasticsearchHealthCheckPublisher : IHealthCheckPublisher {
     public Task PublishAsync(HealthReport report, CancellationToken cancellationToken) {
         // Converti il report in un oggetto log e invialo a Elasticsearch
         foreach (var entry in report.Entries) {
-            Log.Information("Health check for {Name} reported {Status}", entry.Key, entry.Value.Status);
+            string description = string.Concat($"## System Resources\n", entry.Value.Description);
+
+            Log.Information("Health check for {Name} reported {Status} Application {Application} description {Description}", entry.Key, entry.Value.Status, "Application Test", description);
         }
         return Task.CompletedTask;
     }

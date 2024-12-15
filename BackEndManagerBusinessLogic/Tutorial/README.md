@@ -18,9 +18,12 @@
 - [Factory Method - send](OOP/FactoryMethod.md)
 - [Builder Method](OOP/builder.md)
 - [Chain Of Responsability](OOP/chainresponsability.md)
-
+- [Abstract Factory](OOP/AbstractFactory.md)
+  - EntityFramework - DbContext diversi
 #### THREADS
 - [Doc](THREADS/main.md)
+#### KIBANA
+- [Metrics with HealthChecks](ElasticKibana/MetricsWithHealthChecks.md)
 #### PACKAGES
 - [Format template with Enrich](packages/Serilog/Enrich.md)
 ##### Esempi
