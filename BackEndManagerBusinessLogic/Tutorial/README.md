@@ -19,6 +19,7 @@
 - [Builder Method](OOP/builder.md)
 - [Chain Of Responsability](OOP/chainresponsability.md)
 - [Abstract Factory](OOP/AbstractFactory.md)
+- [Repository Pattern](OOP/RepositoryPattern.md) 🌟🌟🌟🌟🌟
   - EntityFramework - DbContext diversi
 #### THREADS
 - [Doc](THREADS/main.md)
@@ -26,6 +27,8 @@
 - [Metrics with HealthChecks](ElasticKibana/MetricsWithHealthChecks.md)
 #### PACKAGES
 - [Format template with Enrich](packages/Serilog/Enrich.md)
+#### DEVOPS
+- [Test Con Postman](DEVOPS/postman_test.md)
 ##### Esempi
 - [Semplice](THREADS/EsempioSemplice.md)
 - [HealthCheck](THREADS/healthcheck.md)
