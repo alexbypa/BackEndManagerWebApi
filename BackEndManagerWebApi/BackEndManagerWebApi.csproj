@@ -25,4 +25,8 @@
     <ProjectReference Include="..\BackEndManagerBusinessLogic\BackEndManagerBusinessLogic.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\Resources\" />
+  </ItemGroup>
+
 </Project>
