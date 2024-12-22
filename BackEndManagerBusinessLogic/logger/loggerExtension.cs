@@ -133,22 +133,22 @@ public class loggerExtension {
 
 // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
 public class ColumnOptionsSection {
-    public List<string> addStandardColumns { get; set; }
-    public List<string> removeStandardColumns { get; set; }
-    public List<CustomColumn> customColumns { get; set; }
+    public List<string>? addStandardColumns { get; set; }
+    public List<string>? removeStandardColumns { get; set; }
+    public List<CustomColumn>? customColumns { get; set; }
 }
 
 public class CustomColumn {
-    public string ColumnName { get; set; }
-    public string DataType { get; set; }
+    public string? ColumnName { get; set; }
+    public string? DataType { get; set; }
     public int DataLength { get; set; }
     public bool AllowNull { get; set; }
 }
 
 public class MSSqlServer {
-    public string connectionString { get; set; }
-    public SinkOptionsSection sinkOptionsSection { get; set; }
-    public ColumnOptionsSection columnOptionsSection { get; set; }
+    public string? connectionString { get; set; }
+    public SinkOptionsSection? sinkOptionsSection { get; set; }
+    public ColumnOptionsSection? columnOptionsSection { get; set; }
 }
 
 public class SerilogConfiguration {
@@ -157,8 +157,8 @@ public class SerilogConfiguration {
 }
 
 public class SerilogCondition {
-    public string Sink { get; set; }
-    public List<string> Level { get; set; }
+    public string? Sink { get; set; }
+    public List<string>? Level { get; set; }
 }
 
 public class SerilogOption {

@@ -66,10 +66,13 @@ public class X509Helper {
                 int startChar = blockIndex * RSA_BLOCKSIZE;
                 byte[] currentBlock = new byte[thisBlockLength];
                 Array.Copy(plainText, startChar, currentBlock, 0, thisBlockLength);
-                byte[] encryptedBlock = provider.Encrypt(currentBlock, RSAEncryptionPadding.Pkcs1);
-                int originalResultLength = result.Length;
-                Array.Resize(ref result, originalResultLength + encryptedBlock.Length);
-                encryptedBlock.CopyTo(result, originalResultLength);
+
+                using (var rsa = new RSACryptoServiceProvider()) {
+                    byte[] encryptedBlock = rsa.Encrypt(currentBlock, true);
+                    int originalResultLength = result.Length;
+                    Array.Resize(ref result, originalResultLength + encryptedBlock.Length);
+                    encryptedBlock.CopyTo(result, originalResultLength);
+                }
             }
             provider.Clear();
             encMsg = Convert.ToBase64String(result);

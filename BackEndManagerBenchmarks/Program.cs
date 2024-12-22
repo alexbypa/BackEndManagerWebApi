@@ -3,6 +3,7 @@ using BenchmarkDotNet.Jobs;
 using BenchmarkDotNet.Running;
 using Newtonsoft.Json;
 
+namespace BenchmarkDotNet;
 class Program {
     public static void Main(string[] args) {
         Console.WriteLine("test");
