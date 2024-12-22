@@ -1,20 +1,20 @@
 #crea la chiave privata rsa con algoritmo sha1 lunga 2048 byte : https://warwick.ac.uk/services/its/servicessupport/web/sign-on/help/oauth/apis/registration/x509/
-.\openssl req -x509 -nodes -days 900 -newkey rsa:1024 -sha1 -keyout GV15077\DEMO\GV15077Demo.pem -out GV15077\DEMO\GV15077Demo.pem
+.\openssl req -x509 -nodes -days 900 -newkey rsa:1024 -sha1 -keyout Demo.pem -out Demo.pem
 
 #Crea il certificato : https://unix.stackexchange.com/questions/131334/obtain-cer-file-from-pem-file
-.\openssl x509 -inform PEM -in GV15077\DEMO\GV15077Demo.pem -outform DER -out GV15077\DEMO\GV15077Demo.cer
+.\openssl x509 -inform PEM -in Demo.pem -outform DER -out Demo.cer
 
 #crea il certificato con chiave privata: https://www.scottbrady91.com/OpenSSL/Creating-RSA-Keys-using-OpenSSL
-.\openssl pkcs12 -export -inkey GV15077\DEMO\GV15077Demo.pem -in GV15077\DEMO\GV15077Demo.pem -out GV15077\DEMO\GV15077Demo.pfx
+.\openssl pkcs12 -export -inkey Demo.pem -in Demo.pem -out Demo.pfx
 
 PWD = ciccio0
 
 #Converte Il certificato nel formato corretto !!!!!!
-.\openssl x509 -inform DER -in GV15077\DEMO\GV15077Demo.cer -out GV15077\DEMO\GV15077Demo.crt 
+.\openssl x509 -inform DER -in Demo.cer -out Demo.crt 
 
 Verifica il certificato !!!!!!!
-.\openssl x509 -in GV15077\DEMO\GV15077Demo.crt -text
+.\openssl x509 -in Demo.crt -text
 
 #Legge il contenuto della chiave publica : 
-openssl x509 -inform der -in GV15077\DEMO\GV15077Demo.cer -pubkey -noout > GV15077\DEMO\GV15077Demo.txt
+openssl x509 -inform der -in Demo.cer -pubkey -noout > Demo.txt
 
