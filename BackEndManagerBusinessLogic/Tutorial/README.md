@@ -29,6 +29,7 @@
 - [Format template with Enrich](packages/Serilog/Enrich.md)
 #### DEVOPS
 - [Test Con Postman](DEVOPS/postman_test.md)
+- [publish packages with Devops](DEVOPS/push_nuget.md)
 ##### Esempi
 - [Semplice](THREADS/EsempioSemplice.md)
 - [HealthCheck](THREADS/healthcheck.md)
