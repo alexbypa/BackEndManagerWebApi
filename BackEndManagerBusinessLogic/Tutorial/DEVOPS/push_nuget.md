@@ -1,0 +1,10 @@
+- VIENE PRESO DALLE IMPOSTAZIONI INSERITE SU VISUAL STUDIO
+nuget.exe sources list
+
+- SU VISUAL STUDIO CONFIGURO SORGENTE PER NUGET :
+	- PRENDO L' INDIRIZZO DA ARTIFACTS
+	- MI COLLEGO AL FEED E SCELGO NUGET
+	- copi indirizzo
+
+- PUBBLICO PACCHETTO
+nuget.exe push -Source "devops" -ApiKey xxxxx GamesSolutionBusinessLayer.1.0.8.nupkg
