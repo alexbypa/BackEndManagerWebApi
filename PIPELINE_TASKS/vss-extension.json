@@ -1,0 +1,61 @@
+{
+	"manifestVersion": 1,
+	"id": "JobScheduler",
+	"publisher": "AlessandroChiodo",
+	"version": "1.4.0",
+	"name": "JobScheduler",
+	"description": "A sample Visual Studio Services extension",
+	"public": true,
+	"categories": [
+		"Azure Repos"
+	],
+	"targets": [
+		{
+			"id": "Microsoft.VisualStudio.Services"
+		}
+	],
+	"content": {
+		"details": {
+			"path": "overview.md"
+		},
+		"license": {
+			"path": "LICENSE"
+		}
+	},
+	"contributions": [
+		{
+			"id": "my-hub",
+			"type": "ms.vss-web.hub",
+			"targets": [
+				"ms.vss-code-web.code-hub-group"
+			],
+			"properties": {
+				"name": "My Hub",
+				"uri": "my-hub.html"
+			}
+		},
+		{
+			"id": "alex-task",
+			"type": "ms.vss-distributed-task.task",
+			"targets": [
+				"ms.vss-distributed-task.tasks"
+			],
+			"properties": {
+				"name": "task-folder"
+			}
+		}
+	],
+	"icons": {
+		"default": "icon.png"
+	},
+	"files": [
+		{
+			"path": "task-folder"
+		},
+		{
+			"path": "task-folder/node_modules/azure-devops-extension-sdk",
+			"addressable": true,
+			"packagePath": "lib"
+		}
+	]
+}

@@ -1,0 +1,27 @@
+--GUIDA:
+https://learn.microsoft.com/en-us/azure/devops/extend/get-started/node?view=azure-devops
+
+-- INSTALLARE LO STRUMENTO PER IL PACKAGING DELLE ESTENSIONI (TFX). ESEGUIRE 
+npm install -g tfx-cli
+
+-- INIZIALIZZARE UN NUOVO MANIFESTO DEL PACCHETTO NPM ( CREA PACKAGE.JSON ) :
+npm init -y
+
+-- COMPILARE IL JSON , soprattutto : 
+"id": "my-first-extension",
+    "publisher": "",
+    "version": "1.0.0",
+    "name": "My First Extension"
+npm install azure-devops-extension-sdk --save
+
+-- CREA PACCHETTO vsix
+tfx extension create --manifest-globs vss-extension.json
+
+-- PUBLICA ESTENSIONE
+tfx extension publish --vsix AlessandroChiodo.JobScheduler-1.2.0.vsix --publisher AlessandroChiodo --organization https://dev.azure.com/ServerSideGIT --token DR7sHMnCOXUSYVSfAhJ3BBG5VFCERtg3Lbgl6RnPCKDHLvD3EZF1JQQJ99BAACAAAAAAAAAAAAASAZDOU7vq --debug
+
+-- CONDIVIDE ESTENSIONE
+tfx extension share --publisher AlessandroChiodo --extension-id JobScheduler --organization https://dev.azure.com/ServerSideGIT --token DR7sHMnCOXUSYVSfAhJ3BBG5VFCERtg3Lbgl6RnPCKDHLvD3EZF1JQQJ99BAACAAAAAAAAAAAAASAZDOU7vq
+
+-- VERIFICA STATO PUBBLICAZIONE:
+tfx extension isvalid --publisher AlessandroChiodo --extension-id JobScheduler --version 1.4.0 --service-url https://marketplace.visualstudio.com/ --token DR7sHMnCOXUSYVSfAhJ3BBG5VFCERtg3Lbgl6RnPCKDHLvD3EZF1JQQJ99BAACAAAAAAAAAAAAASAZDOU7vq

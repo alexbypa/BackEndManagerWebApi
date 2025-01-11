@@ -1,0 +1,31 @@
+{
+  "id": "abc12345-6789-0123-4567-890abcdef012",
+  "name": "alex-task",
+  "friendlyName": "Alex Task",
+  "description": "Task per Azure DevOps",
+  "helpMarkDown": "Esempio di task personalizzato.",
+  "category": "Utility",
+  "visibility": ["Build", "Release"],
+  "author": "Alessandro",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 0
+  },
+  "instanceNameFormat": "Esegui il task Alex con il valore $(myInput)",
+  "inputs": [
+    {
+      "name": "myInput",
+      "type": "string",
+      "label": "My Input",
+      "defaultValue": "test",
+      "required": true,
+      "helpMarkDown": "Un esempio di input per il task."
+    }
+  ],
+  "execution": {
+    "Node": {
+      "target": "index.js"
+    }
+  }
+}
