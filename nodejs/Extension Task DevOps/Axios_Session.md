@@ -35,8 +35,11 @@ const cookieJar = {
     myCookies: undefined,
 };
 
+//const urlBase = 'https://jobschedulerpreprod.pixelo.it/DevOpsListener/';
+const urlBase = 'https://jobscheduler.pixelo.it/DevOpsListener/';
+
 async function setSession() {
-    const response = await axiosInstance.post('https://jobschedulerpreprod.pixelo.it/DevOpsListener/SetSession', {});
+    const response = await axiosInstance.post(`${urlBase}SetSession`, {});
     cookieJar.myCookies = response.headers['set-cookie'];
     console.log('setSession: ', response.data);
     return response.data; // Return the data, this will be the parameter of .then()
@@ -45,7 +48,7 @@ async function setSession() {
 // 3. Add the saved cookie to the request.
 async function getSession() {
     // read the cookie and set it in the headers
-    const response = await axiosInstance.get('https://jobschedulerpreprod.pixelo.it/DevOpsListener/GetSession', 
+    const response = await axiosInstance.get(`${urlBase}GetSession`, 
         {
             headers: {
                 cookie: cookieJar.myCookies,
@@ -76,7 +79,7 @@ async function publish() {
         console.log(cookieJar.myCookies);
         //TODO: passare i parametri corretti
         const response = await axiosInstance.post(
-            'https://jobschedulerpreprod.pixelo.it/DevOpsListener/CapturePipelineDevopsPublish?idSector=1&description=blablabla',
+            `${urlBase}CapturePipelineDevopsPublish?idSector=1&description=blablabla`,
             formData
             , {
                 headers: {
